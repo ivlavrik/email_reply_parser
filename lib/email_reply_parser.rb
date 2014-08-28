@@ -35,19 +35,21 @@ class EmailReplyParser
   # Public: Splits an email body into a list of Fragments.
   #
   # text - A String email body.
+  # @encoding [String] encoding
   #
   # Returns an Email instance.
-  def self.read(text)
-    Email.new.read(text)
+  def self.read(text, encoding = 'binary')
+    Email.new.read(text, encoding)
   end
 
   # Public: Get the text of the visible portions of the given email body.
   #
-  # text - A String email body.
+  # @text - A String email body.
+  # @encoding [String] encoding
   #
   # Returns a String.
-  def self.parse_reply(text)
-    self.read(text).visible_text
+  def self.parse_reply(text, encoding = 'binary')
+    self.read(text, encoding).visible_text
   end
 
   ### Emails
@@ -73,11 +75,12 @@ class EmailReplyParser
     # can check for 'On <date>, <author> wrote:' lines above quoted blocks.
     #
     # text - A String email body.
+    # @encoding [String] encoding
     #
     # Returns this same Email instance.
-    def read(text)
+    def read(text, encoding = 'binary')
       # in 1.9 we want to operate on the raw bytes
-      text = text.dup.force_encoding('binary') if text.respond_to?(:force_encoding)
+      text = text.dup.force_encoding(encoding) if text.respond_to?(:force_encoding)
 
       # Normalize line endings.
       text.gsub!("\r\n", "\n")
